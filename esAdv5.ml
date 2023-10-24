@@ -1,10 +1,15 @@
 module Matrix = struct
     type matrix = int list list
 
+    let getSize m = 
+        (List.length m1, List.length (List.nth m1 0))
+
     let matricesAreSameSize m1 m2 =
-        let n = List.length m1 and  m = List.length (List.nth m1 0)
-        and p = List.length m2 and q = List.length (List.nth m2 0)
+        let (n, m) = getSize m1 
+        and (p, q) = getSize m2
         in n == p && m == q
+    
+
 
     let (=) m1 m2 =
         if matricesAreSameSize m1 m2 then
@@ -26,6 +31,28 @@ module Matrix = struct
         (List.length m)
         (let size = List.length (List.nth m 0) in
             fun _ -> List.init size (fun e -> v * e))
+
+
+    
+    
+    let traspose matrix =
+        let rec traspose result = function
+        | -1 -> Array.of_list result
+        | n -> traspose (Array.init (Array.length matrix) (fun (i) -> matrix.(i).(n))::result) (n - 1)
+    in traspose [] (Array.length matrix.(0) - 1)
+
+    let ( * ) m1 m2 = let (n, m) = getSize m1 and (p, q) = getSize m2 
+        if(p == m) then 
+            Array.map(
+                fun array1 ->
+                    Array.map (
+                        fun (array2) -> Array.fold_left (fun acc v -> (v + acc))
+                        0
+                        (Array.map2 (fun e1 e2 -> (e1 * e2)) array1 array2)
+                    ) (traspose matrix2)
+            ) matrix1
+        else
+            raise (Invalid_argument "Matrices are not compatible for multiplication")
 
 
 end
